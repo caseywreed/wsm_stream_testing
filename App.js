@@ -8,7 +8,8 @@ import {
   ListView,
   Platform,
   TouchableOpacity,
-  Image
+  Image,
+  Button
 } from 'react-native';
 import { ReactNativeAudioStreaming, Player } from 'react-native-audio-streaming';
 import './ReactotronConfig.js'
@@ -17,46 +18,55 @@ export default class App extends Component {
   constructor() {
     super();
     this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-    this.urls = [
+    this.streams = [
       {
-        name: 'Shoutcast stream',
-        url: 'http://lacavewebradio.chickenkiller.com:8000/stream.mp3'
+        name: 'WSM Stream',
+        url: 'http://stream01050.westreamradio.com/wsm2-mp3',
+        image: 'https://lh3.googleusercontent.com/iIlkA7VzcK8Rv2Sp8SO6Ro4eVpodbeA-4a_niBTArMYGZuESzwH__oh0NtJ6HKLLwEw=w300'
       },
       {
-        name: 'M4A stream',
-        url: 'http://web.ist.utl.pt/antonio.afonso/www.aadsm.net/libraries/id3/music/02_Viandanze.m4a'
-      },
-      {
-        name: 'MP3 stream with ID3 meta data',
-        url: 'http://web.ist.utl.pt/antonio.afonso/www.aadsm.net/libraries/id3/music/Bruno_Walter_-_01_-_Beethoven_Symphony_No_1_Menuetto.mp3'
-      },
-      {
-        name: 'MP3 stream',
-        url: 'http://www.stephaniequinn.com/Music/Canon.mp3'
-      },
-      {
-        name: 'WSM Sream',
-        url: 'http://stream01050.westreamradio.com/wsm2-mp3'
-      },
+        name: 'WPLN Nashville',
+        url: 'https://wpln.streamguys1.com/wplnfm.mp3',
+        image: 'https://scontent-dft4-3.xx.fbcdn.net/v/t1.0-9/14055132_10153658252811150_3320364785944253387_n.jpg?oh=95f9a93f96fc14fe1ba935ae5e65e987&oe=5AA66879'
+      }
     ];
 
     this.state = {
-      dataSource: this.ds.cloneWithRows(this.urls),
-      selectedSource: this.urls[0].url
+      streamName: 'Nothing',
+      selectedSource: '',
+      selectedImage: 'http://i0.kym-cdn.com/photos/images/facebook/000/697/080/2db.png'
     };
   }
 
   render() {
     return (
       <View style={styles.container}>
+        <Text>{this.state.streamName}</Text>
         <Image
           style={{ width: 300, height: 300 }}
-          source={{ uri: 'https://lh3.googleusercontent.com/iIlkA7VzcK8Rv2Sp8SO6Ro4eVpodbeA-4a_niBTArMYGZuESzwH__oh0NtJ6HKLLwEw=w300' }}
+          source={{ uri: this.state.selectedImage }}
         />
-        <Player url={'http://stream01050.westreamradio.com/wsm2-mp3'} />
+        <Player url={this.state.selectedSource} />
+        <Button
+          onPress={() => {
+            this.setState({streamName: this.streams[0].name, selectedSource: this.streams[0].url, selectedImage: this.streams[0].image})
+            ReactNativeAudioStreaming.stop()
+          }}
+          title="WSM"
+          color="#841584"
+        />
+        <Button
+          onPress={() => {
+            this.setState({streamName: this.streams[1].name, selectedSource: this.streams[1].url, selectedImage: this.streams[1].image})
+            ReactNativeAudioStreaming.stop()
+          }}
+          title='WPLN'
+          color="#841584"
+        />
       </View>
     );
   }
+
 }
 
 const styles = StyleSheet.create({
